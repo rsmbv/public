@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#002328">
+  
+    <link rel="preload" href="https://du11hjcvx0uqb.cloudfront.net/dist/fonts/lato/extended/Lato-Regular-bd03a2cc27.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" href="https://du11hjcvx0uqb.cloudfront.net/dist/fonts/lato/extended/Lato-Bold-cccb897485.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" href="https://du11hjcvx0uqb.cloudfront.net/dist/fonts/lato/extended/Lato-Italic-4eb103b4d1.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/no_variables/bundles/fonts-6ee09b0b2f.css" media="screen" />
+    <link rel="stylesheet" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/6d3f73d32e3aafec8bf07b08487229ec/variables-7dd4b80918af0e0218ec0229e4bd5873.css" media="all" />
+    <link rel="stylesheet" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/new_styles_normal_contrast/bundles/common-3851139992.css" media="all" />
+    <link rel="stylesheet" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/new_styles_normal_contrast/bundles/dashboard-9568ba84e9.css" media="screen" />
+    <link rel="stylesheet" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/new_styles_normal_contrast/bundles/react_todo_sidebar-df089b77a5.css" media="screen" />
+    <link rel="stylesheet" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/new_styles_normal_contrast/bundles/syllabus-02e336724a.css" media="screen" />
+    <link rel="stylesheet" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/new_styles_normal_contrast/bundles/tinymce-5fc893f669.css" media="screen" />
+    <link rel="stylesheet" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/new_styles_normal_contrast/bundles/course_show-e1b8c407b2.css" media="screen" />
+    <link rel="stylesheet" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/no_variables/bundles/course_show_secondary-5780fe9f85.css" media="screen" />
+    <link rel="stylesheet" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/new_styles_normal_contrast/bundles/syllabus-02e336724a.css" media="screen" />
+    <link rel="stylesheet" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/new_styles_normal_contrast/bundles/new_user_tutorials-6b15f87caf.css" media="screen" />
+    <link rel="apple-touch-icon" href="https://du11hjcvx0uqb.cloudfront.net/dist/images/apple-touch-icon-585e5d997d.png" />
+    <link rel="icon" type="image/x-icon" href="https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico" />
+    
+    <title>Code Generator</title>
+    <style>
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-container label {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 0;
+        }
+        .form-container select, .form-container input[type="text"] {
+            width: 100%;
+            box-sizing: border-box;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            min-height: 35px;
+            font-size: medium;
+        }
+        .code {
+            font-family: monospace;
+            font-size: 12px;
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            position: relative;
+        }
+        .rendered-output {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .copy-button {
+            margin: 0;
+            display: none;
+            position: relative;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <label for="type">Type:</label>
+        <select id="type" onchange="toggleImageUrlField()">
+            <option value="White">White</option>
+            <option value="Gray">Gray</option>
+            <option value="Image">Image</option>
+        </select>
+        <label for="heading">Heading:</label>
+        <input type="text" id="heading">
+        <div id="image-url-container" style="display: none;">
+            <label for="image-url">Image URL:</label>
+            <input type="text" id="image-url">
+        </div>
+        <button class="Button Button--primary" onclick="generateCode()">Generate Code</button>
+    </div>
+    <div class="code" id="code">
+        <button class="Button Button--success copy-button" id="copy-button" onclick="copyCode()">Copy</button>
+        <div class="code-output" id="code-output"></div>
+    </div>
+    <div class="rendered-output" id="rendered-output"></div>
+
+    <script>
+        function toggleImageUrlField() {
+            var type = document.getElementById("type").value;
+            var imageUrlContainer = document.getElementById("image-url-container");
+
+            if (type === "Image") {
+                imageUrlContainer.style.display = "block";
+            } else {
+                imageUrlContainer.style.display = "none";
+            }
+        }
+
+        function generateCode() {
+            var type = document.getElementById("type").value;
+            var heading = document.getElementById("heading").value;
+            var imageUrl = document.getElementById("image-url").value;
+
+            var codeOutput = document.getElementById("code-output");
+            var renderedOutput = document.getElementById("rendered-output");
+            var copyButton = document.getElementById("copy-button");
+
+            var code = "";
+            if (type === "White") {
+                code = `<div style="display: table; width: 100%;">
+    <div style="text-align: left; vertical-align: middle; width: auto; padding: 15px 2%;">
+        <h3><strong>${heading}</strong></h3>
+        <hr style="width: 76px; border: 3px solid #002328;" />
+        <p>{place your content here}</p>
+    </div>
+</div>`;
+            } else if (type === "Gray") {
+                code = `<div style="display: table; width: 100%; min-height: 150px; background: #e3dad8;">
+  <div style="text-align: left; vertical-align: middle; width: auto; padding: 15px 2%;">
+      <h3><strong>${heading}</strong></h3>
+      <hr style="width: 76px; border: 3px solid #002328;" />
+      <p>{place your content here}</p>
+  </div>
+</div>`;
+            } else if (type === "Image") {
+                code = `<div style="display: table; width: 100%; min-height: 150px; background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${imageUrl}') no-repeat center center / cover;">
+  <div style="color: white; text-align: left; vertical-align: middle; width: auto; padding: 15px 2%;">
+      <h3><strong>${heading}</strong></h3>
+      <hr style="width: 76px; border: 3px solid white;" />
+      <p>{place your content here}</p>
+  </div>
+</div>`;
+            }
+            codeOutput.textContent = code;
+            renderedOutput.innerHTML = code;
+            copyButton.style.display = "block";
+        }
+        function copyCode() {
+            var codeOutput = document.getElementById("code-output");
+            var range = document.createRange();
+            range.selectNode(codeOutput);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand("copy");
+            window.getSelection().removeAllRanges();
+        }
+    </script>
+</body>
+</html>
