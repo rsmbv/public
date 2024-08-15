@@ -101,11 +101,11 @@
         </div>
         <button class="Button Button--primary" onclick="generateCode()" style="display: block; margin-top: 10px;">Generate Code</button>
     </div>
-    <div class="code" id="code">
+    <div class="code" id="code" style="display: none;">
         <button class="Button Button--success copy-button" id="copy-button" onclick="copyCode()">Copy</button>
         <div class="code-output" id="code-output"></div>
     </div>
-    <div class="rendered-output" id="rendered-output"></div>
+    <div class="rendered-output" id="rendered-output" style="display: none;"></div>
 
     <script>
     function toggleImageUrlField() {
@@ -146,9 +146,13 @@
                 var buttonCode = ``;
             }
             
+            var codeBlock = document.getElementById("code");
             var codeOutput = document.getElementById("code-output");
             var renderedOutput = document.getElementById("rendered-output");
             var copyButton = document.getElementById("copy-button");
+
+            renderedOutput.style.display = "block";
+            codeBlock.style.display = "block";
 
             var code = "";
             if (type === "White") {
