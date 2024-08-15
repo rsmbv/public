@@ -57,6 +57,7 @@
             white-space: pre-wrap;
             word-wrap: break-word;
             position: relative;
+            background-color: #e2e2e2;
         }
         .rendered-output {
             max-width: 500px;
@@ -76,10 +77,11 @@
 </head>
 <body>
     <div class="form-container">
-        <label for="type">Type:</label>
+        <label for="type">Style:</label>
         <select id="type" onchange="toggleImageUrlField()">
             <option value="White">White</option>
             <option value="Gray">Gray</option>
+            <option value="Dark">Dark</option>
             <option value="Image">Image</option>
         </select>
         <label for="heading">Heading:</label>
@@ -88,7 +90,16 @@
             <label for="image-url">Image URL:</label>
             <input type="text" id="image-url">
         </div>
-        <button class="Button Button--primary" onclick="generateCode()">Generate Code</button>
+        <label for="button">Extra options</label>
+        <input type="checkbox" id="button" name="button" value="Add a button">
+            <label for="button" style="display: inline; font-size: 16px;">Add a button</label>
+        <div id="button-container" style="display: none; margin-top: 10px;">
+            <label for="button-text">Button Text:</label>
+            <input type="text" id="button-text">
+            <label for="button-url">Button URL:</label>
+            <input type="text" id="button-url">
+        </div>
+        <button class="Button Button--primary" onclick="generateCode()" style="display: block; margin-top: 10px;">Generate Code</button>
     </div>
     <div class="code" id="code">
         <button class="Button Button--success copy-button" id="copy-button" onclick="copyCode()">Copy</button>
@@ -97,22 +108,44 @@
     <div class="rendered-output" id="rendered-output"></div>
 
     <script>
-        function toggleImageUrlField() {
-            var type = document.getElementById("type").value;
-            var imageUrlContainer = document.getElementById("image-url-container");
+    function toggleImageUrlField() {
+        var type = document.getElementById("type").value;
+        var imageUrlContainer = document.getElementById("image-url-container");
 
-            if (type === "Image") {
-                imageUrlContainer.style.display = "block";
-            } else {
-                imageUrlContainer.style.display = "none";
-            }
+        if (type === "Image") {
+            imageUrlContainer.style.display = "block";
+        } else {
+            imageUrlContainer.style.display = "none";
         }
+    }
+
+    function toggleButtonContainer() {
+        var buttonContainer = document.getElementById("button-container");
+        var buttonChecked = document.getElementById("button").checked;
+
+        if (buttonChecked) {
+            buttonContainer.style.display = "block";
+        } else {
+            buttonContainer.style.display = "none";
+        }
+    }
+
+    document.getElementById("button").addEventListener("change", toggleButtonContainer);
 
         function generateCode() {
             var type = document.getElementById("type").value;
             var heading = document.getElementById("heading").value;
             var imageUrl = document.getElementById("image-url").value;
+            var buttonText = document.getElementById("button-text").value;
+            var buttonURL = document.getElementById("button-url").value;
+            var buttonChecked = document.getElementById("button").checked;
 
+            if (buttonChecked) {
+                var buttonCode = `<a class="Button" href="${buttonURL}" target="_blank">${buttonText}</a>`;
+            } else {
+                var buttonCode = ``;
+            }
+            
             var codeOutput = document.getElementById("code-output");
             var renderedOutput = document.getElementById("rendered-output");
             var copyButton = document.getElementById("copy-button");
@@ -120,28 +153,36 @@
             var code = "";
             if (type === "White") {
                 code = `<div style="display: table; width: 100%;">
-    <div style="text-align: left; vertical-align: middle; width: auto; padding: 15px 2%;">
-        <h3><strong>${heading}</strong></h3>
-        <hr style="width: 76px; border: 3px solid #002328;" />
-        <p>{place your content here}</p>
-    </div>
-</div>`;
+ <div style="text-align: left; vertical-align: middle; width: auto; padding: 15px 2%;">
+  <h3><strong>${heading}</strong></h3>
+  <hr style="width: 76px; border: 3px solid #002328;" />
+  <p>place your content here</p>
+ ${buttonCode}</div>
+</div><br>`;
             } else if (type === "Gray") {
                 code = `<div style="display: table; width: 100%; min-height: 150px; background: #e3dad8;">
-  <div style="text-align: left; vertical-align: middle; width: auto; padding: 15px 2%;">
-      <h3><strong>${heading}</strong></h3>
-      <hr style="width: 76px; border: 3px solid #002328;" />
-      <p>{place your content here}</p>
-  </div>
-</div>`;
+ <div style="text-align: left; vertical-align: middle; width: auto; padding: 15px 2%;">
+  <h3><strong>${heading}</strong></h3>
+  <hr style="width: 76px; border: 3px solid #002328;" />
+  <p>place your content here</p>
+ ${buttonCode}</div>
+</div><br>`;
+            } else if (type === "Dark") {
+                code = `<div style="display: table; width: 100%; background: #002328;">
+ <div style="text-align: left; vertical-align: middle; width: auto; padding: 15px 2%; color: white;">
+  <h3><strong>${heading}</strong></h3>
+  <hr style="width: 76px; border: 3px solid white;" />
+  <p>place your content here</p>
+ ${buttonCode}</div>
+</div><br>`;
             } else if (type === "Image") {
                 code = `<div style="display: table; width: 100%; min-height: 150px; background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${imageUrl}') no-repeat center center / cover;">
-  <div style="color: white; text-align: left; vertical-align: middle; width: auto; padding: 15px 2%;">
-      <h3><strong>${heading}</strong></h3>
-      <hr style="width: 76px; border: 3px solid white;" />
-      <p>{place your content here}</p>
-  </div>
-</div>`;
+ <div style="color: white; text-align: left; vertical-align: middle; width: auto; padding: 15px 2%;">
+  <h3><strong>${heading}</strong></h3>
+  <hr style="width: 76px; border: 3px solid white;" />
+  <p>place your content here</p>
+ ${buttonCode}</div>
+</div><br>`;
             }
             codeOutput.textContent = code;
             renderedOutput.innerHTML = code;
