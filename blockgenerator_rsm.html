@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" href="https://du11hjcvx0uqb.cloudfront.net/dist/images/apple-touch-icon-585e5d997d.png" />
     <link rel="icon" type="image/x-icon" href="https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico" />
     
-    <title>Block Generator (ESE)</title>
+    <title>Block Generator (RSM)</title>
     <style>
         .form-container {
             max-width: 500px;
@@ -80,8 +80,9 @@
         <label for="type">Style:</label>
         <select id="type" onchange="toggleImageUrlField()">
             <option value="White">White</option>
+            <option value="Gray">Light blue</option>
+            <option value="Dark">Dark blue</option>
             <option value="Gray">Gray</option>
-            <option value="Dark">Dark</option>
             <option value="Image">Image</option>
         </select>
         <label for="heading">Heading:</label>
@@ -159,23 +160,31 @@
                 code = `<div style="display: table; width: 100%;">
  <div style="text-align: left; vertical-align: middle; width: auto; padding: 15px 2%;">
   <h3><strong>${heading}</strong></h3>
-  <hr style="width: 76px; border: 3px solid #002328;" />
+  <hr style="width: 76px; border: 3px solid #2871AD;" />
+  <p>place your content here</p>
+ ${buttonCode}</div>
+</div><p>&nbsp;</p>`;
+            } else if (type === "Light blue") {
+                code = `<div style="display: table; width: 100%; min-height: 150px; background: #D9E7F2;">
+ <div style="text-align: left; vertical-align: middle; width: auto; padding: 15px 2%;">
+  <h3><strong>${heading}</strong></h3>
+  <hr style="width: 76px; border: 3px solid #2871AD;" />
+  <p>place your content here</p>
+ ${buttonCode}</div>
+</div><p>&nbsp;</p>`;
+            } else if (type === "Dark blue") {
+                code = `<div style="display: table; width: 100%; background: #171C54;">
+ <div style="text-align: left; vertical-align: middle; width: auto; padding: 15px 2%; color: white;">
+  <h3><strong>${heading}</strong></h3>
+  <hr style="width: 76px; border: 3px solid white;" />
   <p>place your content here</p>
  ${buttonCode}</div>
 </div><p>&nbsp;</p>`;
             } else if (type === "Gray") {
-                code = `<div style="display: table; width: 100%; min-height: 150px; background: #e3dad8;">
+                code = `<div style="display: table; width: 100%; min-height: 150px; background: #F5F5F5;">
  <div style="text-align: left; vertical-align: middle; width: auto; padding: 15px 2%;">
   <h3><strong>${heading}</strong></h3>
-  <hr style="width: 76px; border: 3px solid #002328;" />
-  <p>place your content here</p>
- ${buttonCode}</div>
-</div><p>&nbsp;</p>`;
-            } else if (type === "Dark") {
-                code = `<div style="display: table; width: 100%; background: #002328;">
- <div style="text-align: left; vertical-align: middle; width: auto; padding: 15px 2%; color: white;">
-  <h3><strong>${heading}</strong></h3>
-  <hr style="width: 76px; border: 3px solid white;" />
+  <hr style="width: 76px; border: 3px solid #2871AD;" />
   <p>place your content here</p>
  ${buttonCode}</div>
 </div><p>&nbsp;</p>`;
