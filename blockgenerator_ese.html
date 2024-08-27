@@ -90,15 +90,36 @@
             <label for="image-url">Image URL:</label>
             <input type="text" id="image-url">
         </div>
-        <label for="button">Extra options</label>
-        <input type="checkbox" id="button" name="button" value="Add a button">
+        <label>Extra options</label>
+        <div>
+            <input type="checkbox" id="button" name="button" value="Add a button">
             <label for="button" style="display: inline; font-size: 16px;">Add a button</label>
+        </div>
         <div id="button-container" style="display: none; margin-top: 10px;">
             <label for="button-text">Button Text:</label>
             <input type="text" id="button-text">
             <label for="button-url">Button URL:</label>
             <input type="text" id="button-url">
         </div>
+        <div>
+            <input type="checkbox" id="icon" name="icon" value="Add an icon">
+            <label for="icon" style="display: inline; font-size: 16px;">Add an icon to the heading</label>
+        </div>
+        <div id="icon-container" style="display: none; margin-top: 10px;">
+            <label for="icon-select">Icon:</label>
+            <select id="icon-select">
+                <option value="assignment">Assignment</option>
+                <option value="courses">Book</option>
+                <option value="discussion">Discussion/Chat</option>
+                <option value="folder">Folder</option>
+                <option value="bullet-list">List/Overview</option>
+                <option value="studio">Live Session</option>
+                <option value="mic">Microphone</option>
+                <option value="module">Module</option>
+                <option value="video">Video</option>
+                <option value="annotate">Write</option>
+        </select>
+    </div>
         <button class="Button Button--primary" onclick="generateCode()" style="display: block; margin-top: 10px;">Generate Code</button>
     </div>
     <div class="code" id="code" style="display: none;">
@@ -130,7 +151,19 @@
         }
     }
 
+    function toggleIconContainer() {
+        var iconContainer = document.getElementById("icon-container");
+        var iconChecked = document.getElementById("icon").checked;
+
+        if (iconChecked) {
+            iconContainer.style.display = "block";
+        } else {
+            iconContainer.style.display = "none";
+        }
+    }
+
     document.getElementById("button").addEventListener("change", toggleButtonContainer);
+    document.getElementById("icon").addEventListener("change", toggleIconContainer);
 
         function generateCode() {
             var type = document.getElementById("type").value;
@@ -139,11 +172,19 @@
             var buttonText = document.getElementById("button-text").value;
             var buttonURL = document.getElementById("button-url").value;
             var buttonChecked = document.getElementById("button").checked;
+            var icon = document.getElementById("icon-select").value;
+            var iconChecked = document.getElementById("icon").checked;
 
             if (buttonChecked) {
                 var buttonCode = `<a class="Button" href="${buttonURL}" target="_blank">${buttonText}</a>`;
             } else {
                 var buttonCode = ``;
+            }
+
+            if (iconChecked) {
+                var iconCode = `<i class="icon-Line icon-${icon}">&nbsp;&nbsp;</i>`;
+            } else {
+                var iconCode = ``;
             }
             
             var codeBlock = document.getElementById("code");
@@ -158,7 +199,7 @@
             if (type === "White") {
                 code = `<div style="display: table; width: 100%;">
  <div style="text-align: left; vertical-align: middle; width: auto; padding: 15px 2%;">
-  <h3><strong>${heading}</strong></h3>
+  <h3>${iconCode}<strong>${heading}</strong></h3>
   <hr style="width: 76px; border: 3px solid #002328;" />
   <p>place your content here</p>
  ${buttonCode}</div>
@@ -166,7 +207,7 @@
             } else if (type === "Gray") {
                 code = `<div style="display: table; width: 100%; min-height: 150px; background: #e3dad8;">
  <div style="text-align: left; vertical-align: middle; width: auto; padding: 15px 2%;">
-  <h3><strong>${heading}</strong></h3>
+  <h3>${iconCode}<strong>${heading}</strong></h3>
   <hr style="width: 76px; border: 3px solid #002328;" />
   <p>place your content here</p>
  ${buttonCode}</div>
@@ -174,7 +215,7 @@
             } else if (type === "Dark") {
                 code = `<div style="display: table; width: 100%; background: #002328;">
  <div style="text-align: left; vertical-align: middle; width: auto; padding: 15px 2%; color: white;">
-  <h3><strong>${heading}</strong></h3>
+  <h3>${iconCode}<strong>${heading}</strong></h3>
   <hr style="width: 76px; border: 3px solid white;" />
   <p>place your content here</p>
  ${buttonCode}</div>
@@ -182,7 +223,7 @@
             } else if (type === "Image") {
                 code = `<div style="display: table; width: 100%; min-height: 150px; background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${imageUrl}') no-repeat center center / cover;">
  <div style="color: white; text-align: left; vertical-align: middle; width: auto; padding: 15px 2%;">
-  <h3><strong>${heading}</strong></h3>
+  <h3>${iconCode}<strong>${heading}</strong></h3>
   <hr style="width: 76px; border: 3px solid white;" />
   <p>place your content here</p>
  ${buttonCode}</div>
